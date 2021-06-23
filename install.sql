@@ -10,5 +10,5 @@ CREATE TABLE news (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY_KEY,
     title VARCHAR (255),
     content TEXT,
-    created_at TIMESTAMP (14)
+    created_at TIMESTAMP (14) DEFAULT CURRENT_TIMESTAMP
 )
