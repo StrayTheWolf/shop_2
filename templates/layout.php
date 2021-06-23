@@ -12,10 +12,14 @@
 <body class="d-flex align-items-center flex-column w-20 p-3 text-center">
 
 <header>
-    <h1><?= $title ?? 'Главная страница' ?></h1>
+    <h1><?= $title ?? '' ?></h1>
+
     <h2><?= $newsCreateTime ?? '' ?></h2>
     <div>
         <?= include 'templates/menu.php' ?>
+    </div>
+    <div>
+
     </div>
 </header>
 

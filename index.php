@@ -6,6 +6,7 @@
 /////Сделать умный роутинг
 /////Добавить страницы pages +
 /////Добавить страницы news +
+/////Добавить вывод всех новостей -
  */
 
 $url = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
@@ -47,8 +48,27 @@ if ($partUrl[0] == 'news')
     $prepared->execute();
     $news = $prepared->fetch(PDO::FETCH_ASSOC);
 
-    // проверка 404 если нет id в базе со страницами
-    if (!$news)
+    //print_r($partUrl[1]);
+
+    //вывод всех новостей если путь /news/* - пустота
+    if ($partUrl[0] == 'news' && $partUrl[1] == '')
+    {
+        $pdo = new PDO('mysql:dbname=shop;host=127.0.0.1','root','Werewolf1989*');
+        //подготавливаем запрос из базы
+        $prepared = $pdo->prepare('SELECT id, title, content, created_at FROM shop.news GROUP BY id');
+        //выполняем запрос
+        $prepared->execute();
+        $newsAll = $prepared->fetchAll(PDO::FETCH_ASSOC);
+
+        //print_r($newsAll);
+        //вывод темлейт со списком новостей где из переменной newsAll foreach делает поиск по массиву и подставляет данные
+        include 'templates/listNews.php';
+        include 'templates/layout.php';
+        exit;
+    }
+
+    //проверка 404 если нет id в базе со страницами
+    else if (!$news)
     {
         include 'templates/404.php';
         include 'templates/layout.php';
