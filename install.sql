@@ -2,5 +2,12 @@ DROP TABLE IF EXISTS pages;
 CREATE TABLE pages (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY_KEY,
     title VARCHAR (255),
-    text TEXT
+    content TEXT
+),
+
+DROP TABLE IF EXISTS news;
+CREATE TABLE news (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY_KEY,
+    title VARCHAR (255),
+    content TEXT
 )

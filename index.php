@@ -35,6 +35,29 @@ if ($partUrl[0] == 'pages')
     include 'templates/layout.php';
 }
 
+if ($partUrl[0] == 'news')
+{
+    $pdo = new PDO('mysql:dbname=shop;host=127.0.0.1','root','Werewolf1989*');
+    $prepared = $pdo->prepare('SELECT id, title, content FROM shop.news WHERE id = ?');
+    //связываем цифру из пути как параметр для запроса
+    $prepared->bindParam(1,$partUrl[1], PDO::PARAM_INT);
+    //выполняем запрос
+    $prepared->execute();
+    $news = $prepared->fetch(PDO::FETCH_ASSOC);
+
+    // проверка 404 если нет id в базе со страницами
+    if (!$news)
+    {
+        include 'templates/404.php';
+        include 'templates/layout.php';
+        exit;
+    }
+
+    $title = $news['title'];
+    $content = $news['content'];
+    include 'templates/layout.php';
+}
+
 /*
  Задание: Простой интернет магазин
 Требования использвоать bootstrap или tailwind для оформления. Не использовать свои js или css.
