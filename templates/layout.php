@@ -13,6 +13,7 @@
 
 <header>
     <h1><?= $title ?? 'Главная страница' ?></h1>
+    <h2><?= $newsCreateTime ?? '' ?></h2>
     <div>
         <?= include 'templates/menu.php' ?>
     </div>

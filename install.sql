@@ -9,5 +9,6 @@ DROP TABLE IF EXISTS news;
 CREATE TABLE news (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY_KEY,
     title VARCHAR (255),
-    content TEXT
+    content TEXT,
+    created_at TIMESTAMP (14)
 )

@@ -3,7 +3,9 @@
 /*
 //Создать файл со структурой БД +
 //Наполнить таблицу какими то (тестовыми) данными +
-//Сделать умный роутинг
+/////Сделать умный роутинг
+/////Добавить страницы pages +
+/////Добавить страницы news +
  */
 
 $url = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
@@ -38,7 +40,7 @@ if ($partUrl[0] == 'pages')
 if ($partUrl[0] == 'news')
 {
     $pdo = new PDO('mysql:dbname=shop;host=127.0.0.1','root','Werewolf1989*');
-    $prepared = $pdo->prepare('SELECT id, title, content FROM shop.news WHERE id = ?');
+    $prepared = $pdo->prepare('SELECT id, title, content, created_at FROM shop.news WHERE id = ?');
     //связываем цифру из пути как параметр для запроса
     $prepared->bindParam(1,$partUrl[1], PDO::PARAM_INT);
     //выполняем запрос
@@ -55,11 +57,13 @@ if ($partUrl[0] == 'news')
 
     $title = $news['title'];
     $content = $news['content'];
+    $newsCreateTime = 'Дата и время публикации' . ': '. $news['created_at'];
+
     include 'templates/layout.php';
 }
 
 /*
- Задание: Простой интернет магазин
+Задание: Простой интернет магазин
 Требования использвоать bootstrap или tailwind для оформления. Не использовать свои js или css.
 
 Часть 1) Релизовать пользовательскую часть - простые страницы. В магазине должно быть 6 простых страниц содержимое которых берётся из базы данных.
