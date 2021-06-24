@@ -38,7 +38,7 @@ if ($partUrl[0] == 'pages') {
     include 'templates/layout.php';
 }
 
-if ($partUrl[0] == 'news') {
+if ($partUrl[0] == 'news' && $partUrl[1] !== null) {
     $pdo = new PDO('mysql:dbname=shop;host=127.0.0.1', 'root', 'Werewolf1989*');
     $prepared = $pdo->prepare('SELECT id, title, content, created_at FROM shop.news WHERE id = ?');
     //связываем цифру из пути как параметр для запроса
@@ -47,30 +47,7 @@ if ($partUrl[0] == 'news') {
     $prepared->execute();
     $news = $prepared->fetch(PDO::FETCH_ASSOC);
 
-    //вывод всех новостей если путь /news/* - пустота
-    if ($partUrl[0] == 'news' && $partUrl[1] == '') {
-        $pdo = new PDO('mysql:dbname=shop;host=127.0.0.1', 'root', 'Werewolf1989*');
-        //подготавливаем запрос из базы
-        $prepared = $pdo->prepare('SELECT id, title, content, created_at FROM shop.news GROUP BY id');
-        //выполняем запрос
-        $prepared->execute();
-        $news = $prepared->fetchAll(PDO::FETCH_ASSOC);
-
-        //вывод темлейт со списком новостей где из переменной newsAll foreach делает поиск по массиву и подставляет данные
-
-        //включаем буфер
-        ob_start();
-        include 'templates/listAllNews.php';
-        // собираем темлейт со списком новостей
-        $content = ob_get_contents();
-        ob_clean();
-        $title = 'Все Новости';
-        //инклудим основной шаблон в котором в переменную content  передаем ссожержимое буфера с нвостями
-        include 'templates/layout.php';
-        exit;
-
-    } //проверка 404 если нет id в базе со страницами
-    else if (!$news) {
+    if (!$news) {
         include 'templates/404.php';
         include 'templates/layout.php';
         exit;
@@ -86,6 +63,35 @@ if ($partUrl[0] == 'news') {
     //инклудим основной шаблон в котором в переменную content  передаем содержимое буфера с новостями
     include 'templates/layout.php';
     exit;
+}
+
+//вывод всех новостей если путь /news/* - пустота
+if ($partUrl[0] == 'news' && $partUrl[1] == '') {
+    $pdo = new PDO('mysql:dbname=shop;host=127.0.0.1', 'root', 'Werewolf1989*');
+    //подготавливаем запрос из базы
+    $prepared = $pdo->prepare('SELECT id, title, content, created_at FROM shop.news GROUP BY id');
+    //выполняем запрос
+    $prepared->execute();
+    $news = $prepared->fetchAll(PDO::FETCH_ASSOC);
+
+    //вывод темлейт со списком новостей где из переменной newsAll foreach делает поиск по массиву и подставляет данные
+
+    //включаем буфер
+    ob_start();
+    include 'templates/listAllNews.php';
+    // собираем темлейт со списком новостей
+    $content = ob_get_contents();
+    ob_clean();
+    $title = 'Все Новости';
+    //инклудим основной шаблон в котором в переменную content  передаем ссожержимое буфера с нвостями
+    include 'templates/layout.php';
+
+    //проверка 404 если нет id в базе со страницами
+    if (!$news) {
+        include 'templates/404.php';
+        include 'templates/layout.php';
+        exit;
+    }
 }
 
 /*
