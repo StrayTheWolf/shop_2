@@ -58,11 +58,17 @@ if ($partUrl[0] == 'news')
         $prepared = $pdo->prepare('SELECT id, title, content, created_at FROM shop.news GROUP BY id');
         //выполняем запрос
         $prepared->execute();
-        $newsAll = $prepared->fetchAll(PDO::FETCH_ASSOC);
+        $news = $prepared->fetchAll(PDO::FETCH_ASSOC);
 
-        //print_r($newsAll);
         //вывод темлейт со списком новостей где из переменной newsAll foreach делает поиск по массиву и подставляет данные
-        include 'templates/listNews.php';
+
+        //включаем буфер
+        ob_start();
+        include 'templates/listAllNews.php';
+        // собираем темлейт со списком новостей
+        $content = ob_get_contents();
+        ob_clean();
+        //инклудим основной шаблон в котором в переменную content  передаем ссожержимое буфера с нвостями
         include 'templates/layout.php';
         exit;
     }
@@ -75,11 +81,15 @@ if ($partUrl[0] == 'news')
         exit;
     }
 
-    $title = $news['title'];
-    $content = $news['content'];
-    $newsCreateTime = 'Дата и время публикации' . ': '. $news['created_at'];
-
+    //включаем буфер
+    ob_start();
+    include 'templates/listOneNews.php';
+    // собираем темлейт со списком новостей
+    $content = ob_get_contents();
+    ob_clean();
+    //инклудим основной шаблон в котором в переменную content  передаем ссожержимое буфера с нвостями
     include 'templates/layout.php';
+    exit;
 }
 
 /*

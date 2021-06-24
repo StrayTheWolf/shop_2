@@ -1,19 +1,16 @@
 <ul class="nav flex-column ">
     <!-- Проходим циклом по результату запроса из базы путем вызова функции -->
-    <?php foreach ($newsAll as $item): ?>
-        <br>
         <li class="nav-item mb-3 text-start border border-info border-2 rounded p-2" >
             ID:
-            <?= $item['id'] ?>
+            <?= $news['id'] ?>
             <br>
             Заголовок:
-            <?= $item['title'] ?>
+            <?= $news['title'] ?>
             <br>
             Текст:
-            <?= $item['content'] ?>
+            <?= $news['content'] ?>
             <br>
             Дата и время публикации:
-            <?= $item['created_at'] ?>
+            <?= $news['created_at'] ?>
         </li>
-    <?php endforeach; ?>
 </ul>

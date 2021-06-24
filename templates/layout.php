@@ -18,9 +18,6 @@
     <div>
         <?= include 'templates/menu.php' ?>
     </div>
-    <div>
-
-    </div>
 </header>
 
 <main>
