@@ -18,5 +18,8 @@
         <li class="nav-item">
             <a class="nav-link" href="/pages/6">О нас</a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/news/">Новости</a>
+        </li>
     </ul>
 </nav>

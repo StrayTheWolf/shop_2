@@ -6,7 +6,8 @@
 /////Сделать умный роутинг
 /////Добавить страницы pages +
 /////Добавить страницы news +
-/////Добавить вывод всех новостей -
+/////Добавить вывод всех новостей +
+/////Переделать pages с буфером -
  */
 
 $url = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
@@ -14,19 +15,18 @@ $url = trim($url, '/');
 
 $partUrl = explode('/', $url);
 
-if ($partUrl[0] == 'pages')
-{
-    $pdo = new PDO('mysql:dbname=shop;host=127.0.0.1','root','Werewolf1989*');
+if ($partUrl[0] == 'pages') {
+    $pdo = new PDO('mysql:dbname=shop;host=127.0.0.1', 'root', 'Werewolf1989*');
     //подготавливаем запрос
     $prepared = $pdo->prepare('SELECT id, title, content FROM shop.pages WHERE id = ?');
     //связываем цифру из пути как параметр для запроса
-    $prepared->bindParam(1,$partUrl[1], PDO::PARAM_INT);
+    $prepared->bindParam(1, $partUrl[1], PDO::PARAM_INT);
     //выполняем запрос
     $prepared->execute();
     $page = $prepared->fetch(PDO::FETCH_ASSOC);
 
     // проверка 404 если нет id в базе со страницами
-    if (!$page)
+    if (!$page) // если в page ничего не пришло, значит в базе нет такого ID знчит 404
     {
         include 'templates/404.php';
         include 'templates/layout.php';
@@ -38,22 +38,18 @@ if ($partUrl[0] == 'pages')
     include 'templates/layout.php';
 }
 
-if ($partUrl[0] == 'news')
-{
-    $pdo = new PDO('mysql:dbname=shop;host=127.0.0.1','root','Werewolf1989*');
+if ($partUrl[0] == 'news') {
+    $pdo = new PDO('mysql:dbname=shop;host=127.0.0.1', 'root', 'Werewolf1989*');
     $prepared = $pdo->prepare('SELECT id, title, content, created_at FROM shop.news WHERE id = ?');
     //связываем цифру из пути как параметр для запроса
-    $prepared->bindParam(1,$partUrl[1], PDO::PARAM_INT);
+    $prepared->bindParam(1, $partUrl[1], PDO::PARAM_INT);
     //выполняем запрос
     $prepared->execute();
     $news = $prepared->fetch(PDO::FETCH_ASSOC);
 
-    //print_r($partUrl[1]);
-
     //вывод всех новостей если путь /news/* - пустота
-    if ($partUrl[0] == 'news' && $partUrl[1] == '')
-    {
-        $pdo = new PDO('mysql:dbname=shop;host=127.0.0.1','root','Werewolf1989*');
+    if ($partUrl[0] == 'news' && $partUrl[1] == '') {
+        $pdo = new PDO('mysql:dbname=shop;host=127.0.0.1', 'root', 'Werewolf1989*');
         //подготавливаем запрос из базы
         $prepared = $pdo->prepare('SELECT id, title, content, created_at FROM shop.news GROUP BY id');
         //выполняем запрос
@@ -68,14 +64,13 @@ if ($partUrl[0] == 'news')
         // собираем темлейт со списком новостей
         $content = ob_get_contents();
         ob_clean();
+        $title = 'Все Новости';
         //инклудим основной шаблон в котором в переменную content  передаем ссожержимое буфера с нвостями
         include 'templates/layout.php';
         exit;
-    }
 
-    //проверка 404 если нет id в базе со страницами
-    else if (!$news)
-    {
+    } //проверка 404 если нет id в базе со страницами
+    else if (!$news) {
         include 'templates/404.php';
         include 'templates/layout.php';
         exit;
@@ -87,7 +82,8 @@ if ($partUrl[0] == 'news')
     // собираем темлейт со списком новостей
     $content = ob_get_contents();
     ob_clean();
-    //инклудим основной шаблон в котором в переменную content  передаем ссожержимое буфера с нвостями
+    $title = 'Новости';
+    //инклудим основной шаблон в котором в переменную content  передаем содержимое буфера с новостями
     include 'templates/layout.php';
     exit;
 }
