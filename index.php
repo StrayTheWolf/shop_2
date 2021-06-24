@@ -33,12 +33,19 @@ if ($partUrl[0] == 'pages') {
         exit;
     }
 
-    $title = $page['title'];
-    $content = $page['content'];
-    include 'templates/layout.php';
+    ob_start();
+    include 'templates/page.php'; // берем шаблон для контента страницы
+    $content = ob_get_contents(); // собирвем в переменную
+    ob_clean();
+    $title = $page['title']; // этот элемент уже в основной layout т.к. там есть для него переменная
+    include 'templates/layout.php'; // инклудим основной шаблон
+    exit;
+//    $title = $page['title'];
+//    $content = $page['content'];
+//    include 'templates/layout.php';
 }
 
-if ($partUrl[0] == 'news' && $partUrl[1] !== null) {
+if ($partUrl[0] == 'news' && isset($partUrl[1])) {
     $pdo = new PDO('mysql:dbname=shop;host=127.0.0.1', 'root', 'Werewolf1989*');
     $prepared = $pdo->prepare('SELECT id, title, content, created_at FROM shop.news WHERE id = ?');
     //связываем цифру из пути как параметр для запроса
@@ -66,7 +73,7 @@ if ($partUrl[0] == 'news' && $partUrl[1] !== null) {
 }
 
 //вывод всех новостей если путь /news/* - пустота
-if ($partUrl[0] == 'news' && $partUrl[1] == '') {
+if ($partUrl[0] == 'news' && isset($partUrl[1]) == '') {
     $pdo = new PDO('mysql:dbname=shop;host=127.0.0.1', 'root', 'Werewolf1989*');
     //подготавливаем запрос из базы
     $prepared = $pdo->prepare('SELECT id, title, content, created_at FROM shop.news GROUP BY id');
