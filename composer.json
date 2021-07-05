@@ -1,0 +1,20 @@
+{
+    "name": "shop_test/stray",
+    "description": "shop test project",
+    "type": "project",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Wolf Stanislav",
+            "email": "ork2004@yandex.ru"
+        }
+    ],
+    "require": {
+        "ext-pdo": "*"
+    }
+}

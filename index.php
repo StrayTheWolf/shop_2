@@ -10,15 +10,20 @@
 /////Переделать pages с буфером -
  */
 
+require __DIR__ . '/vendor/autoload.php';
+
 $url = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $url = trim($url, '/');
 
 $partUrl = explode('/', $url);
 
 if ($partUrl[0] == 'pages') {
-    $pdo = new PDO('mysql:dbname=shop;host=127.0.0.1', 'root', 'Werewolf1989*');
+    //соединение с бд через класс
+    $database = new \App\Database\DatabaseConnection();
+    $connection = $database->getConnection();
+
     //подготавливаем запрос
-    $prepared = $pdo->prepare('SELECT id, title, content FROM shop.pages WHERE id = ?');
+    $prepared = $connection->prepare('SELECT id, title, content FROM shop.pages WHERE id = ?');
     //связываем цифру из пути как параметр для запроса
     $prepared->bindParam(1, $partUrl[1], PDO::PARAM_INT);
     //выполняем запрос
@@ -46,8 +51,11 @@ if ($partUrl[0] == 'pages') {
 }
 
 if ($partUrl[0] == 'news' && isset($partUrl[1])) {
-    $pdo = new PDO('mysql:dbname=shop;host=127.0.0.1', 'root', 'Werewolf1989*');
-    $prepared = $pdo->prepare('SELECT id, title, content, created_at FROM shop.news WHERE id = ?');
+    //соединение с бд через класс
+    $database = new \App\Database\DatabaseConnection();
+    $connection = $database->getConnection();
+
+    $prepared = $connection->prepare('SELECT id, title, content, created_at FROM shop.news WHERE id = ?');
     //связываем цифру из пути как параметр для запроса
     $prepared->bindParam(1, $partUrl[1], PDO::PARAM_INT);
     //выполняем запрос
@@ -74,9 +82,12 @@ if ($partUrl[0] == 'news' && isset($partUrl[1])) {
 
 //вывод всех новостей если путь /news/* - пустота
 if ($partUrl[0] == 'news' && isset($partUrl[1]) == '') {
-    $pdo = new PDO('mysql:dbname=shop;host=127.0.0.1', 'root', 'Werewolf1989*');
+    //соединение с бд через класс
+    $database = new \App\Database\DatabaseConnection();
+    $connection = $database->getConnection();
+
     //подготавливаем запрос из базы
-    $prepared = $pdo->prepare('SELECT id, title, content, created_at FROM shop.news GROUP BY id');
+    $prepared = $connection->prepare('SELECT id, title, content, created_at FROM shop.news GROUP BY id');
     //выполняем запрос
     $prepared->execute();
     $news = $prepared->fetchAll(PDO::FETCH_ASSOC);
